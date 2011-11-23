@@ -1,0 +1,11 @@
+﻿<UserControl x:Class="LazyCat.SmartImage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="454" d:DesignWidth="488" SizeChanged="UserControl_SizeChanged">
+    <Grid>
+        <Image Height="150" HorizontalAlignment="Center" Name="image" Stretch="Uniform" VerticalAlignment="Center" Width="200" />
+    </Grid>
+</UserControl>

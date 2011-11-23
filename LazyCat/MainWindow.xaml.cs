@@ -81,12 +81,13 @@ namespace LazyCat
             {
                 if (Clipboard.ContainsData(DataFormats.Bitmap))
                 {
-                    this.image.Source = (System.Windows.Interop.InteropBitmap)Clipboard.GetData(DataFormats.Bitmap);
+                    BitmapSource source = (System.Windows.Interop.InteropBitmap)Clipboard.GetData(DataFormats.Bitmap);
                     c++;
+                    this.image.SetImage(source);
                     using (FileStream fs = new FileStream(string.Format("{0}.png", c), FileMode.Create, FileAccess.Write))
                     {
                         PngBitmapEncoder enc = new PngBitmapEncoder();
-                        enc.Frames.Add(BitmapFrame.Create(this.image.Source as BitmapSource));
+                        enc.Frames.Add(BitmapFrame.Create(source));
                         enc.Save(fs);
                         fs.Close();
                         fs.Dispose();
