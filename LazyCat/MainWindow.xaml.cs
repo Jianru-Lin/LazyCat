@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.IO;
+using System.Collections.Specialized;
 
 namespace LazyCat
 {
@@ -84,17 +85,57 @@ namespace LazyCat
                     BitmapSource source = (System.Windows.Interop.InteropBitmap)Clipboard.GetData(DataFormats.Bitmap);
                     c++;
                     this.image.SetImage(source);
-                    using (FileStream fs = new FileStream(string.Format("{0}.png", c), FileMode.Create, FileAccess.Write))
+                    saveImage(source);
+                }
+                else if (Clipboard.ContainsFileDropList())
+                {
+                    StringCollection fileDropList = Clipboard.GetFileDropList();
+                    if (fileDropList.Count > 0)
                     {
-                        PngBitmapEncoder enc = new PngBitmapEncoder();
-                        enc.Frames.Add(BitmapFrame.Create(source));
-                        enc.Save(fs);
-                        fs.Close();
-                        fs.Dispose();
+                        BitmapSource source = loadImage(fileDropList[0]);
+                        if (source != null)
+                        {
+                            this.image.SetImage(source);
+                            saveImage(source);
+                        }
+                    }
+                }
+                else if (Clipboard.ContainsText())
+                {
+                    string text = Clipboard.GetText();
+                    if (text.StartsWith("http"))
+                    {
+                        this.image.SetURL(text);
                     }
                 }
             }
             catch { }
+        }
+
+        void saveImage(BitmapSource source)
+        {
+            using (FileStream fs = new FileStream(string.Format("{0}.png", c), FileMode.Create, FileAccess.Write))
+            {
+                PngBitmapEncoder enc = new PngBitmapEncoder();
+                enc.Frames.Add(BitmapFrame.Create(source));
+                enc.Save(fs);
+                fs.Close();
+                fs.Dispose();
+            }
+        }
+
+        BitmapSource loadImage(string filename)
+        {
+            try
+            {
+                BitmapImage image = new BitmapImage(new Uri(filename));
+                return image;
+            }
+            catch (System.Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return null;
+            }
         }
 
         int c = 0;

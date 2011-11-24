@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
 
 namespace LazyCat
 {
@@ -22,6 +23,20 @@ namespace LazyCat
         public SmartImage()
         {
             InitializeComponent();
+        }
+
+        public void SetURL(string url)
+        {
+            try
+            {
+                Uri uri = new Uri(url);
+                BitmapImage bitmapImage = new BitmapImage(uri);
+                image.Source = bitmapImage;
+            }
+            catch (System.Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         public void SetImage(BitmapSource source)
